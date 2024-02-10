@@ -1,7 +1,7 @@
 firstName
 lastName
 email
-mobileNumber
+phoneNumber
 age
 country
 gender
