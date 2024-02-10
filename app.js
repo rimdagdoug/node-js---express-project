@@ -85,8 +85,8 @@ liveReloadServer.server.once("connection", () => {
 
   app.post("/user/add.html", (req, res) => {
    
-    const user  = new User(req.body);
-    user.save().then(() => {
+    
+    User.create(req.body).then(() => {
       res.redirect("/");
     }).catch((err) => {
       console.log(err);
@@ -94,6 +94,7 @@ liveReloadServer.server.once("connection", () => {
    
   });
 
+  // delete request
   app.delete("/edit/:id", (req, res) => {
 
     User.findByIdAndDelete(req.params.id).then(() => {
@@ -103,6 +104,16 @@ liveReloadServer.server.once("connection", () => {
       console.log(err)
     })
 
+  });
+// put request
+  app.put("/edit/:id" , (req,res) => {
+    
+    User.findByIdAndUpdate(req.params.id, req.body).then((result) => {
+      
+      res.redirect("/")
+    }).catch((err) => {
+      console.log(err)
+    })
   });
 
 
