@@ -39,6 +39,8 @@ liveReloadServer.server.once("connection", () => {
     
       
     });
+
+   
   
 
 
@@ -46,6 +48,19 @@ liveReloadServer.server.once("connection", () => {
   app.get("/user/add.html", (req, res) => {
     res.render("user/add")
   });
+
+  app.get("/user/:id", (req, res) => {
+  
+    User.findById(req.params.id).then((result) => {
+      
+      res.render("user/view", {obj: result});
+
+    }).catch((err) => {
+      console.log(err)
+    })
+    
+      
+    });
 
   app.get("/user/view.html", (req, res) => {
     res.render("user/view")
