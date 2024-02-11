@@ -68,17 +68,15 @@ liveReloadServer.server.once("connection", () => {
   });
 
   app.get("/view/:id", (req, res) => {
-  
-    User.deleteOne({ _id: req.params.id }).then((result) => {
-      
-      res.render("user/view", {obj: result , moment: moment});
-
-    }).catch((err) => {
-      console.log(err)
-    })
-    
-      
-    });
+    // result ==> object
+    User.findById(req.params.id)
+      .then((result) => {
+        res.render("user/view", { obj: result, moment: moment });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
 
 
   //post
@@ -93,6 +91,20 @@ liveReloadServer.server.once("connection", () => {
     });
    
   });
+
+  app.post("/search", (req, res) => {
+   
+    console.log("------------------------")
+    const searchText = req.body.searchText.trim();
+    User.find({ $or: [{firstName: searchText}, {lastName: searchText}]}).then((result) => {
+     console.log(result)
+      res.render("user/search", {arr: result , moment: moment})
+    }).catch((err) => {
+      console.log(err);
+    });
+   
+  });
+
 
   // delete request
   app.delete("/edit/:id", (req, res) => {
