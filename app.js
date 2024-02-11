@@ -3,12 +3,14 @@ const app = express()
 const port = 3000
 const mongoose = require('mongoose');
 app.use(express.urlencoded({ extended: true }));
-const User= require("./models/customerSchema")
+
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
-var moment = require('moment');
+
 var methodOverride = require('method-override')
 app.use(methodOverride('_method'))
+const allRoutes = require('./routes/allRoutes')
+const   addUserRoute = require('./routes/addUser')
 
 
 //auto refresh 
@@ -27,107 +29,6 @@ liveReloadServer.server.once("connection", () => {
   }, 100);
 });
 
-//get
-
-
-  app.get("/", (req, res) => {
-  
-    User.find().then((result) => {
-      
-      res.render("index", {arr: result , moment: moment});
-
-    }).catch((err) => {
-      console.log(err)
-    })
-    
-      
-    });
-
-   
-  
-
-
-  
-  app.get("/user/add.html", (req, res) => {
-    res.render("user/add")
-  });
-
-  
-
- // app.get("/user/view.html", (req, res) => {
-    //res.render("user/view")
-  //});
-
-  app.get("/edit/:id", (req, res) => {
-    User.findById(req.params.id).then((result) => {
-      res.render("user/edit", {obj: result, moment: moment})
-    }).catch((err) => {
-      console.log(err)
-    })
-    
-  });
-
-  app.get("/view/:id", (req, res) => {
-    // result ==> object
-    User.findById(req.params.id)
-      .then((result) => {
-        res.render("user/view", { obj: result, moment: moment });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  });
-
-
-  //post
-
-  app.post("/user/add.html", (req, res) => {
-   
-    
-    User.create(req.body).then(() => {
-      res.redirect("/");
-    }).catch((err) => {
-      console.log(err);
-    });
-   
-  });
-
-  app.post("/search", (req, res) => {
-   
-    console.log("------------------------")
-    const searchText = req.body.searchText.trim();
-    User.find({ $or: [{firstName: searchText}, {lastName: searchText}]}).then((result) => {
-     console.log(result)
-      res.render("user/search", {arr: result , moment: moment})
-    }).catch((err) => {
-      console.log(err);
-    });
-   
-  });
-
-
-  // delete request
-  app.delete("/edit/:id", (req, res) => {
-
-    User.findByIdAndDelete(req.params.id).then(() => {
-      res.redirect("/");
-
-    }).catch((err) => {
-      console.log(err)
-    })
-
-  });
-// put request
-  app.put("/edit/:id" , (req,res) => {
-    
-    User.findByIdAndUpdate(req.params.id, req.body).then((result) => {
-      
-      res.redirect("/")
-    }).catch((err) => {
-      console.log(err)
-    })
-  });
-
 
 
   
@@ -144,5 +45,7 @@ mongoose.connect("mongodb+srv://rimdagdoug99:oaLMWppajct6KjLs@cluster0.xlcvrpf.m
     console.log(err);
   
   });
+  app.use( allRoutes)
+  app.use("/user/add.html", addUserRoute)
 
  
