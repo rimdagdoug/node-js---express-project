@@ -39,7 +39,7 @@ const user_search_post = (req, res) => {
 
   const searchText = req.body.searchText.trim();
 
-  User.find({ $or: [{ fireName: searchText }, { lastName: searchText }] })
+  User.find({ $or: [{ firstName: searchText }, { lastName: searchText }] })
     .then((result) => {
       console.log(result);
       res.render("user/search", { arr: result, moment: moment });
